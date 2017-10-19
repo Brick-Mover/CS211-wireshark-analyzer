@@ -42,24 +42,24 @@ def main():
         output.write( "ANALYZE ACTIVE PERIOD\n" )
         activeDownLogList = preprocess( lines, localIP, activeStart, activeEnd, DOWNLOAD )
         for log in activeDownLogList:
-            output.write( '%s ---> %s (%s) :\n' % ( log[0][SRC], localIP, log[0][PROTO] ) )
+            output.write( '%s ---> %s (%s) [%d packets]:\n' % ( log[0][SRC], localIP, log[0][PROTO], len( log ) ) )
             analyze( log, output )
 
         activeUpLogList = preprocess( lines, localIP, activeStart, activeEnd, UPLOAD )
         for log in activeUpLogList:
-            output.write( '%s ---> %s (%s) :\n' % ( log[0][DST], localIP, log[0][PROTO] ) )
+            output.write( '%s ---> %s (%s) [%d packets]:\n' % ( log[0][DST], localIP, log[0][PROTO], len( log ) ) )
             analyze( log, output )
 
         # analyze IDLE period, return a list of logs clustered by servers
         output.write( "\nANALYZE IDLE PERIOD\n" )
         idleDownLogList = preprocess( lines, localIP, idleStart, idleEnd, DOWNLOAD )
         for log in idleDownLogList:
-            output.write( '%s ---> %s (%s) :\n' % ( log[0][SRC], localIP, log[0][PROTO] ) )
+            output.write( '%s ---> %s (%s) [%d packets]:\n' % ( log[0][SRC], localIP, log[0][PROTO], len( log ) ) )
             analyze( log, output )
 
         idleUpLogList = preprocess( lines, localIP, idleStart, idleEnd, UPLOAD )
         for log in idleUpLogList:
-            output.write( '%s ---> %s (%s) :\n' % ( log[0][DST], localIP, log[0][PROTO] ) )
+            output.write( '%s ---> %s (%s) [%d packets]:\n' % ( log[0][DST], localIP, log[0][PROTO], len( log ) ) )
             analyze( log, output )
 
 
@@ -70,7 +70,7 @@ def main():
 4) LEN != 0 
 '''
 def preprocess(
-        lines: List[List[str]],
+lines: List[List[str]],
         localIP: str, start: int, end: int, DIR: int ) -> List[List[str]]:
 
     d = DST if DIR == UPLOAD else SRC  # if we are uploading, pick top SERVER_LIMIT from DST, else SRC
@@ -116,12 +116,13 @@ def analyze( log: List[str], output ) -> None:
 
     # calculate average time diff between each packet
     times = [ float( x[TIME] ) for x in log ]
-    print ( times )
     deltas = [ t - s for s, t in zip( times, times[1:] ) ]
     mean = np.mean(deltas)
     median = np.median(deltas)
     output.write( '\t' + 'mean delta: ' + str( mean ) + '\n' +
                   '\t' + 'median delta: ' + str( median ) + '\n' )
+
+
 
 
 if __name__== "__main__":

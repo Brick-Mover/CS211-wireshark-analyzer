@@ -1,32 +1,32 @@
 ANALYZE ACTIVE PERIOD
-216.58.219.46 ---> 192.168.137.119 (TLSv1.2) :
+216.58.219.46 ---> 192.168.137.119 (TLSv1.2) [21 packets]:
 	mean size: 290.761904762
 	median size: 202.0
 	mean delta: 0.061815
 	median delta: 0.004986
-54.192.142.208 ---> 192.168.137.119 (TLSv1.2) :
+54.192.142.208 ---> 192.168.137.119 (TLSv1.2) [6 packets]:
 	mean size: 674.5
 	median size: 556.0
 	mean delta: 0.0284942
 	median delta: 0.032783
-216.58.219.46 ---> 192.168.137.119 (TCP) :
+216.58.219.46 ---> 192.168.137.119 (TCP) [22 packets]:
 	mean size: 130.363636364
 	median size: 66.0
 	mean delta: 0.0589067142857
 	median delta: 0.008215
-54.192.142.208 ---> 192.168.137.119 (TCP) :
+54.192.142.208 ---> 192.168.137.119 (TCP) [7 packets]:
 	mean size: 68.8571428571
 	median size: 66.0
 	mean delta: 0.0404295
 	median delta: 0.016731
 
 ANALYZE IDLE PERIOD
-54.192.142.208 ---> 192.168.137.119 (TCP) :
+54.192.142.208 ---> 192.168.137.119 (TCP) [215 packets]:
 	mean size: 1402.91627907
 	median size: 1440.0
 	mean delta: 0.00407139252336
 	median delta: 0.00041800000001
-54.192.142.208 ---> 192.168.137.119 (TCP) :
+54.192.142.208 ---> 192.168.137.119 (TCP) [147 packets]:
 	mean size: 66.0
 	median size: 66.0
 	mean delta: 0.00572518493151
