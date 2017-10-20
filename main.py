@@ -76,8 +76,6 @@ def main():
 3) pick only top SERVER_LIMIT server IPs with the most common protocol
 4) LEN != 0 
 '''
-
-
 def preprocess(lines: List[List[str]],
                localIP: str, start: int, end: int, dir: int) -> List[List[List[str]]]:
     d = DST if dir == UPLOAD else SRC  # if we are uploading, pick top SERVER_LIMIT from DST, else SRC
@@ -137,7 +135,8 @@ def analyzeLength(log: List[List[str]], output, server: str, dir: int, plot=Fals
         title = 'upload to %s' if dir == UPLOAD else 'download from %s'
         plt.title(title % server)
         plt.savefig(server + '_upload_length.png' if dir == UPLOAD else server + '_download_length.png')
-        #plt.show()
+        plt.clf()
+
 
 def analyzeTime(log: List[List[str]], output, server: str, dir: int, plot=False) -> None:
     # calculate average time diff between each packet
@@ -150,13 +149,14 @@ def analyzeTime(log: List[List[str]], output, server: str, dir: int, plot=False)
 
     if plot:
         times = [float(x[TIME]) for x in log]
-        plt.plot(times[1:], deltas, marker='x', linestyle='--', color='r')
+        plt.plot(times[1:], deltas, marker='x', linestyle='--')
         plt.xlabel('time(s)')
         plt.ylabel('time diff(ms)')
         title = 'upload to %s' if dir == UPLOAD else 'download from %s'
         plt.title(title % server)
         plt.savefig(server + '_upload_timediff.png' if dir == UPLOAD else server + '_download_timediff.png')
-        #plt.show()
+        plt.clf()
+
 
 def analyzePort(log: List[List[str]], output, server: str, dir: int) -> None:
     # analyze srcPort and dstPort
