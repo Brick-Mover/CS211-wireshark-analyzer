@@ -1,47 +1,31 @@
 ANALYZE ACTIVE PERIOD
-54.192.142.208 ---> 192.168.137.119 (TCP) [33 packets]:
-		443 > 40835: 30 packets.
-		443 > 40836: 3 packets.
-	mean size: 236.424242424
-	median size: 66.0
-	mean delta: 0.947113
-	median delta: 0.0081595
-54.236.34.54 ---> 192.168.137.119 (TCP) [60 packets]:
-		9339 > 39826: 60 packets.
-	mean size: 107.683333333
-	median size: 66.0
-	mean delta: 0.860912762712
-	median delta: 0.91814
-54.192.142.208 ---> 192.168.137.119 (TLSv1.2) [43 packets]:
-		 > : 43 packets.
-	mean size: 176.744186047
-	median size: 172.0
-	mean delta: 0.0512941666667
-	median delta: 0.0064925
-54.236.34.54 ---> 192.168.137.119 (TCP) [63 packets]:
-		39826 > 9339: 63 packets.
-	mean size: 103.126984127
+ACTIVE: DOWNLOAD
+54.192.142.208 ---> 192.168.137.119 (TLSv1.2) [27 packets]:
+	mean size: 490.148148148
+	median size: 383.0
+	mean delta: 81.9825
+	median delta: 10.7875
+
+ACTIVE: UPLOAD
+54.236.34.54 ---> 192.168.137.119 (TCP) [49 packets]:
+		39826 > 9339: 49 packets.
+	mean size: 113.734693878
 	median size: 101.0
-	mean delta: 0.818951774194
-	median delta: 0.8671185
-172.217.11.170 ---> 192.168.137.119 (TCP) [15 packets]:
-		40083 > 443: 10 packets.
-		40080 > 443: 5 packets.
-	mean size: 340.933333333
-	median size: 66.0
-	mean delta: 0.0457413571429
-	median delta: 0.007023
+	mean delta: 1057.81270833
+	median delta: 951.908
 
 ANALYZE IDLE PERIOD
-54.192.142.208 ---> 192.168.137.119 (TCP) [215 packets]:
-		443 > 40835: 215 packets.
-	mean size: 1402.91627907
+IDLE: DOWNLOAD
+54.192.142.208 ---> 192.168.137.119 (TCP) [210 packets]:
+		443 > 40835: 210 packets.
+	mean size: 1434.57619048
 	median size: 1440.0
-	mean delta: 0.00407139252336
-	median delta: 0.00041800000001
-54.192.142.208 ---> 192.168.137.119 (TCP) [147 packets]:
-		40835 > 443: 147 packets.
-	mean size: 66.0
-	median size: 66.0
-	mean delta: 0.00572518493151
-	median delta: 9.99999997475e-07
+	mean delta: 4.16879425837
+	median delta: 0.438000000003
+
+IDLE: UPLOAD
+54.192.142.208 ---> 192.168.137.119 (TLSv1.2) [12 packets]:
+	mean size: 161.0
+	median size: 193.0
+	mean delta: 67.4254545455
+	median delta: 18.514
