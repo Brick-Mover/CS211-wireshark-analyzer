@@ -23,11 +23,11 @@ INFO = 6
 
 
 def main():
-    args = sys.argv
-    '''
+    """
     args: logfile.csv active_start_idx, active_end_idx, idle_start_idx, idle_end_idx, ip_address
     all indices are inclusive
-    '''
+    """
+    args = sys.argv
     assert (len(args) == 7)
     filename = args[1]  # this is the name of the log, in CSV format
     activeStart = int(args[2])
@@ -70,14 +70,14 @@ def main():
             analyze(log, output, log[0][DST], UPLOAD)
 
 
-'''filter log entries that:
-1) has NO. between [start, end]
-2) has correct stream direction with localIP
-3) pick only top SERVER_LIMIT server IPs with the most common protocol
-4) LEN != 0 
-'''
 def preprocess(lines: List[List[str]],
                localIP: str, start: int, end: int, dir: int) -> List[List[List[str]]]:
+    """filter log entries that:
+    1) has NO. between [start, end]
+    2) has correct stream direction
+    3) pick only top SERVER_LIMIT server IPs with the most common protocol
+    4) us not TCP ACK(Len != 0)
+    """
     d = DST if dir == UPLOAD else SRC  # if we are uploading, pick top SERVER_LIMIT from DST, else SRC
 
     # filter by direction, and non-emptiness
@@ -111,9 +111,8 @@ def preprocess(lines: List[List[str]],
     return result
 
 
-''' Should be replaced with a more sophisticated analyzer
-'''
 def analyze(log: List[List[str]], output, server: str, dir: int) -> None:
+    """Add your own analyzer function here"""
     analyzePort(log, output, server, dir)
     analyzeLength(log, output, server, dir, plot=True)
     analyzeTime(log, output, server, dir, plot=True)
@@ -171,8 +170,8 @@ def analyzePort(log: List[List[str]], output, server: str, dir: int) -> None:
         output.write('\t' + m + ': ' + str(cnt) + ' packets.\n')
 
 
-''' Parse port number from INFO section, return ( srcPort, dstPort ) '''
 def portNum(row: List[str]) -> (str, str):
+    """Parse port number from INFO section, return ( srcPort, dstPort )"""
     idx = row[INFO].find('>')
     if idx == -1:
         return None, None
