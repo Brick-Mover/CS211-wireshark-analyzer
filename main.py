@@ -168,7 +168,7 @@ def analyzePort(log: List[List[str]], output, server: str, dir: int) -> None:
         k = srcPort + ' > ' + dstPort
         portCnt[k] += 1
     for m, cnt in portCnt.most_common():
-        output.write('\t\t' + m + ': ' + str(cnt) + ' packets.\n')
+        output.write('\t' + m + ': ' + str(cnt) + ' packets.\n')
 
 
 ''' Parse port number from INFO section, return ( srcPort, dstPort ) '''
