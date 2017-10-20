@@ -1,31 +1,40 @@
 ANALYZE ACTIVE PERIOD
 ACTIVE: DOWNLOAD
-54.192.142.208 ---> 192.168.137.119 (TLSv1.2) [27 packets]:
-	mean size: 490.148148148
-	median size: 383.0
-	mean delta: 81.9825
-	median delta: 10.7875
+54.192.142.80 ---> 192.168.137.53 (TCP) [169 packets]:
+	srcPort: 443 > dstPort: 47802: 169 packets
+	mean size: 1505.50 Bytes
+	median size: 1514.00 Bytes
+	variance: 12129.55 Bytes
+	mean delta: 5.37 ms
+	median delta: 0.38 ms
+	variance: 1741.43 ms
 
 ACTIVE: UPLOAD
-54.236.34.54 ---> 192.168.137.119 (TCP) [49 packets]:
-		39826 > 9339: 49 packets.
-	mean size: 113.734693878
-	median size: 101.0
-	mean delta: 1057.81270833
-	median delta: 951.908
+54.192.142.80 ---> 192.168.137.53 (TLSv1.2) [30 packets]:
+	mean size: 168.97 Bytes
+	median size: 183.00 Bytes
+	variance: 2581.37 Bytes
+	mean delta: 30.47 ms
+	median delta: 3.72 ms
+	variance: 9903.34 ms
 
 ANALYZE IDLE PERIOD
 IDLE: DOWNLOAD
-54.192.142.208 ---> 192.168.137.119 (TCP) [210 packets]:
-		443 > 40835: 210 packets.
-	mean size: 1434.57619048
-	median size: 1440.0
-	mean delta: 4.16879425837
-	median delta: 0.438000000003
+54.198.167.174 ---> 192.168.137.53 (TCP) [18 packets]:
+	srcPort: 9339 > dstPort: 49676: 18 packets
+	mean size: 100.61 Bytes
+	median size: 89.00 Bytes
+	variance: 681.90 Bytes
+	mean delta: 4125.46 ms
+	median delta: 4998.28 ms
+	variance: 2663647.89 ms
 
 IDLE: UPLOAD
-54.192.142.208 ---> 192.168.137.119 (TLSv1.2) [12 packets]:
-	mean size: 161.0
-	median size: 193.0
-	mean delta: 67.4254545455
-	median delta: 18.514
+54.198.167.174 ---> 192.168.137.53 (TCP) [29 packets]:
+	srcPort: 49676 > dstPort: 9339: 29 packets
+	mean size: 94.79 Bytes
+	median size: 89.00 Bytes
+	variance: 35.96 Bytes
+	mean delta: 2504.75 ms
+	median delta: 2506.41 ms
+	variance: 2218527.18 ms
