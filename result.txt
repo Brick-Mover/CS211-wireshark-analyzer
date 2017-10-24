@@ -1,40 +1,36 @@
-ANALYZE ACTIVE PERIOD
-ACTIVE: DOWNLOAD
-54.192.142.80 ---> 192.168.137.53 (TCP) [169 packets]:
-	srcPort: 443 > dstPort: 47802: 169 packets
-	mean size: 1505.50 Bytes
+ANALYZE 100 ~ 200 PERIOD(DOWNLOAD)
+54.192.142.80 ---> 192.168.137.53 (TCP) [20 packets]:
+	srcPort: 443 > dstPort: 47802: 20 packets
+	mean size: 1514.00 Bytes
 	median size: 1514.00 Bytes
-	variance: 12129.55 Bytes
-	mean delta: 5.37 ms
-	median delta: 0.38 ms
-	variance: 1741.43 ms
-
-ACTIVE: UPLOAD
-54.192.142.80 ---> 192.168.137.53 (TLSv1.2) [30 packets]:
-	mean size: 168.97 Bytes
-	median size: 183.00 Bytes
-	variance: 2581.37 Bytes
-	mean delta: 30.47 ms
-	median delta: 3.72 ms
-	variance: 9903.34 ms
-
-ANALYZE IDLE PERIOD
-IDLE: DOWNLOAD
+	variance: 0.00 Bytes
+	mean delta: 3.01 ms
+	median delta: 0.15 ms
+	variance: 99.21 ms
+54.198.167.174 ---> 192.168.137.53 (TCP) [10 packets]:
+	srcPort: 9339 > dstPort: 49676: 10 packets
+	mean size: 89.00 Bytes
+	median size: 89.00 Bytes
+	variance: 0.00 Bytes
+	mean delta: 4452.51 ms
+	median delta: 5007.06 ms
+	variance: 1843097.83 ms
+ANALYZE 100 ~ 200 PERIOD(UPLOAD)
 54.198.167.174 ---> 192.168.137.53 (TCP) [18 packets]:
-	srcPort: 9339 > dstPort: 49676: 18 packets
+	srcPort: 49676 > dstPort: 9339: 18 packets
 	mean size: 100.61 Bytes
-	median size: 89.00 Bytes
-	variance: 681.90 Bytes
-	mean delta: 4125.46 ms
-	median delta: 4998.28 ms
-	variance: 2663647.89 ms
-
-IDLE: UPLOAD
-54.198.167.174 ---> 192.168.137.53 (TCP) [29 packets]:
-	srcPort: 49676 > dstPort: 9339: 29 packets
-	mean size: 94.79 Bytes
-	median size: 89.00 Bytes
-	variance: 35.96 Bytes
-	mean delta: 2504.75 ms
-	median delta: 2506.41 ms
-	variance: 2218527.18 ms
+	median size: 101.00 Bytes
+	variance: 196.79 Bytes
+	mean delta: 2361.42 ms
+	median delta: 1846.72 ms
+	variance: 1912240.44 ms
+ANALYZE 400 ~ 500 PERIOD(DOWNLOAD)
+54.192.142.80 ---> 192.168.137.53 (TCP) [47 packets]:
+	srcPort: 443 > dstPort: 47802: 47 packets
+	mean size: 1514.00 Bytes
+	median size: 1514.00 Bytes
+	variance: 0.00 Bytes
+	mean delta: 12.41 ms
+	median delta: 0.38 ms
+	variance: 6043.41 ms
+ANALYZE 400 ~ 500 PERIOD(UPLOAD)

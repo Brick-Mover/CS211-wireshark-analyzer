@@ -1,18 +1,16 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 import sys
 import os
 import csv
+import re
 from collections import Counter
-from typing import Dict, List
+from typing import Dict, List, Tuple
 import numpy as np
 import matplotlib.pyplot as plt
 
 UPLOAD = 'upload'
 DOWNLOAD = 'download'
-
-IDLE = 'idle'
-ACTIVE = 'active'
 
 NEGLIGIBLE_THRESHOLD = 10  # if a server sends < N packets during a period, ignore it
 SERVER_LIMIT = 3  # analyze communication between localIP and up to N different servers
@@ -33,51 +31,53 @@ if not os.path.isdir(diagram_dir):
 
 def main():
     """
-    args: logfile.csv active_start_idx, active_end_idx, idle_start_idx, idle_end_idx, ip_address
+    args: logfile.csv argFile.csv ip_address
+    idxFile should have 3 args in each row, i.e.
+
+    idxStart1 idxEnd1 name1
+    idxStart2 idxEnd2 name2
+
     all indices are inclusive
     """
     args = sys.argv
-    assert (len(args) == 7)
-    filename = args[1]  # this is the name of the log, in CSV format
-    activeStart = int(args[2])
-    activeEnd = int(args[3])
-    idleStart = int(args[4])
-    idleEnd = int(args[5])
-    localIP = args[6]
+    assert (len(args) == 4)
+    logName = args[1]   # this is the name of the log, in CSV format
+    idxName = args[2]
+    localIP = args[3]
 
-    with open(filename, 'rt', encoding='utf-8') as log, open('result.txt', 'w') as output:
+    regex = '([\d]+) ([\d]+) (.*)'
+
+    with open(logName, 'rt', encoding='utf-8') as log, \
+            open(idxName, 'rt', encoding='utf-8') as idx, \
+            open('result.txt', 'w') as output:
+        idxLst = []
+        for row in idx:
+            result = re.match(regex, row)
+            assert (result is not None)
+            t = result.groups()
+            assert (len(t) == 3 and int(t[0]) < int(t[1]))
+            idxLst.append((int(t[0]), int(t[1]), t[2]))
+
         logReader = csv.reader(log)
         lines = list(logReader)
-        for x in args[2:6]:
-            assert (0 < int(x) < len(lines))
+        print (len(lines))
+        for t in idxLst:
+            print (t[0], t[1])
+            assert (0 < t[0] < len(lines) and 0 < t[1] < len(lines))
 
-        # analyze ACTIVE period, return a list of logs clustered by servers
-        output.write("ANALYZE ACTIVE PERIOD\n")
-        output.write("ACTIVE: DOWNLOAD\n")
-        activeDownLogList = preprocess(lines, localIP, activeStart, activeEnd, DOWNLOAD)
-        for log in activeDownLogList:
-            output.write('%s ---> %s (%s) [%d packets]:\n' % (log[0][SRC], localIP, log[0][PROTO], len(log)))
-            analyze(log, output, log[0][SRC], DOWNLOAD, ACTIVE)
+        # analyze period, return a list of logs clustered by servers
+        for t in idxLst:
+            output.write("ANALYZE %d ~ %d PERIOD(DOWNLOAD)\n" % (t[0], t[1]))
+            activeDownLogList = preprocess(lines, localIP, t[0], t[1], DOWNLOAD)
+            for log in activeDownLogList:
+                output.write('%s ---> %s (%s) [%d packets]:\n' % (log[0][SRC], localIP, log[0][PROTO], len(log)))
+                analyze(log, output, log[0][SRC], DOWNLOAD, t[2], plot=True)
 
-        output.write("\nACTIVE: UPLOAD\n")
-        activeUpLogList = preprocess(lines, localIP, activeStart, activeEnd, UPLOAD)
-        for log in activeUpLogList:
-            output.write('%s ---> %s (%s) [%d packets]:\n' % (log[0][DST], localIP, log[0][PROTO], len(log)))
-            analyze(log, output, log[0][DST], UPLOAD, ACTIVE)
-
-        # analyze IDLE period, return a list of logs clustered by servers
-        output.write("\nANALYZE IDLE PERIOD\n")
-        output.write("IDLE: DOWNLOAD\n")
-        idleDownLogList = preprocess(lines, localIP, idleStart, idleEnd, DOWNLOAD)
-        for log in idleDownLogList:
-            output.write('%s ---> %s (%s) [%d packets]:\n' % (log[0][SRC], localIP, log[0][PROTO], len(log)))
-            analyze(log, output, log[0][SRC], DOWNLOAD, IDLE)
-
-        output.write("\nIDLE: UPLOAD\n")
-        idleUpLogList = preprocess(lines, localIP, idleStart, idleEnd, UPLOAD)
-        for log in idleUpLogList:
-            output.write('%s ---> %s (%s) [%d packets]:\n' % (log[0][DST], localIP, log[0][PROTO], len(log)))
-            analyze(log, output, log[0][DST], UPLOAD, IDLE)
+            output.write("ANALYZE %d ~ %d PERIOD(UPLOAD)\n" % (t[0], t[1]))
+            activeUpLogList = preprocess(lines, localIP, t[0], t[1], UPLOAD)
+            for log in activeUpLogList:
+                output.write('%s ---> %s (%s) [%d packets]:\n' % (log[0][DST], localIP, log[0][PROTO], len(log)))
+                analyze(log, output, log[0][DST], UPLOAD, t[2], plot=True)
 
 
 def preprocess(lines: List[List[str]],
@@ -121,14 +121,14 @@ def preprocess(lines: List[List[str]],
     return result
 
 
-def analyze(log: List[List[str]], output, server: str, dir: str, state: str) -> None:
+def analyze(log: List[List[str]], output, server: str, dir: str, desc: str, plot=True) -> None:
     """Add your own analyzer function here"""
     analyzePort(log, output, server, dir)
-    analyzeLength(log, output, server, dir, state, plot=True)
-    analyzeTime(log, output, server, dir, state, plot=True)
+    analyzeLength(log, output, server, dir, desc, plot)
+    analyzeTime(log, output, server, dir, desc, plot)
 
 
-def analyzeLength(log: List[List[str]], output, server: str, dir: str, state: str, plot=False) -> None:
+def analyzeLength(log: List[List[str]], output, server: str, dir: str, desc: str, plot=False) -> None:
     # calculate average size of packets
     proto = log[0][PROTO]
     lengths = [int(x[LENGTH]) for x in log]
@@ -143,12 +143,12 @@ def analyzeLength(log: List[List[str]], output, server: str, dir: str, state: st
         plt.plot(times, lengths, marker='x', linestyle='--')
         plt.xlabel('time(s)')
         plt.ylabel('packet size(B)')
-        plt.title(server + '_' + dir + '_' + state + '_packetSize_' + proto)
-        plt.savefig(diagram_dir + server + '_' + dir + '_' + state + '_packetSize_' + proto + '.png')
+        plt.title('%s %s %s packet size analysis(%s)' % (desc, server, dir, proto))
+        plt.savefig(diagram_dir + '%s_%s_%s_packet_size(%s).png' % (desc, server, dir, proto))
         plt.clf()
 
 
-def analyzeTime(log: List[List[str]], output, server: str, dir: str, state: str, plot=False) -> None:
+def analyzeTime(log: List[List[str]], output, server: str, dir: str, desc: str, plot=False) -> None:
     # calculate average time diff between each packet
     proto = log[0][PROTO]
     times = [float(x[TIME]) for x in log]
@@ -164,8 +164,8 @@ def analyzeTime(log: List[List[str]], output, server: str, dir: str, state: str,
         plt.plot(times[1:], deltas, marker='x', linestyle='--')
         plt.xlabel('time(s)')
         plt.ylabel('time diff(ms)')
-        plt.title(server + '_' + dir + '_' + state + '_timeDiff' + proto)
-        plt.savefig(diagram_dir + server + '_' + dir + '_' + state + '_timeDiff_' + proto + '.png')
+        plt.title('%s %s %s time diff analysis(%s)' % (desc, server, dir, proto))
+        plt.savefig(diagram_dir + '%s_%s_%s_time_diff(%s).png' % (desc, server, dir, proto))
         plt.clf()
 
 
