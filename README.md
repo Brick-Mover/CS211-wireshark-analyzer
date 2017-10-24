@@ -7,6 +7,7 @@ First save the wireshark log as a .csv file, e.g. cocLog.csv. Then create a file
 include three things: start index, end index, and a short description(no space), e.g.
 
 100 200 playing
+
 1200 1600 idle
 
 Then use command:
