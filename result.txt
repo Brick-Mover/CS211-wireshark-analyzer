@@ -1,18 +1,44 @@
 
 ANALYZE active(100 ~ 200) PERIOD(DOWNLOAD)
 	mean throughput: 851.17
-54.198.167.174 ---> 192.168.137.53 (TCP) [28 packets]:
-54.192.142.80 ---> 192.168.137.53 (TCP) [24 packets]:
+54.192.142.80 ---> 192.168.137.53 (TCP) [20 packets]:
+	srcPort: 443 > dstPort: 47802: 20 packets
+	mean size: 1514.00 Bytes
+	median size: 1514.00 Bytes
+	variance: 0.00 Bytes
+	mean delta: 3.01 ms
+	median delta: 0.15 ms
+	variance: 99.21 ms
+54.198.167.174 ---> 192.168.137.53 (TCP) [10 packets]:
+	srcPort: 9339 > dstPort: 49676: 10 packets
+	mean size: 89.00 Bytes
+	median size: 89.00 Bytes
+	variance: 0.00 Bytes
+	mean delta: 4452.51 ms
+	median delta: 5007.06 ms
+	variance: 1843097.83 ms
 
 ANALYZE active(100 ~ 200) PERIOD(UPLOAD)
 	mean throughput: 109.16
-54.198.167.174 ---> 192.168.137.53 (TCP) [28 packets]:
-54.192.142.80 ---> 192.168.137.53 (TCP) [10 packets]:
+54.198.167.174 ---> 192.168.137.53 (TCP) [18 packets]:
+	srcPort: 49676 > dstPort: 9339: 18 packets
+	mean size: 100.61 Bytes
+	median size: 101.00 Bytes
+	variance: 196.79 Bytes
+	mean delta: 2361.42 ms
+	median delta: 1846.72 ms
+	variance: 1912240.44 ms
 
 ANALYZE idle(400 ~ 500) PERIOD(DOWNLOAD)
 	mean throughput: 151446.27
-54.192.142.80 ---> 192.168.137.53 (TCP) [48 packets]:
+54.192.142.80 ---> 192.168.137.53 (TCP) [47 packets]:
+	srcPort: 443 > dstPort: 47802: 47 packets
+	mean size: 1514.00 Bytes
+	median size: 1514.00 Bytes
+	variance: 0.00 Bytes
+	mean delta: 12.41 ms
+	median delta: 0.38 ms
+	variance: 6043.41 ms
 
 ANALYZE idle(400 ~ 500) PERIOD(UPLOAD)
 	mean throughput: 5709.60
-54.192.142.80 ---> 192.168.137.53 (TCP) [29 packets]:

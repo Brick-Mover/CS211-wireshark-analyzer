@@ -72,28 +72,24 @@ def main():
             activeDownLogList = preprocess(lines, localIP, t[0], t[1], DOWNLOAD)
             for log in activeDownLogList:
                 output.write('%s ---> %s (%s) [%d packets]:\n' % (log[0][SRC], localIP, log[0][PROTO], len(log)))
-                #analyze(log, output, log[0][SRC], DOWNLOAD, t[2], plot=True)
+                analyze(log, output, log[0][SRC], DOWNLOAD, t[2], plot=True)
 
             output.write("\nANALYZE %s(%d ~ %d) PERIOD(UPLOAD)\n" % (t[2], t[0], t[1]))
             analyzeThroughput(lines, t[0], t[1], localIP, UPLOAD, output)
             activeUpLogList = preprocess(lines, localIP, t[0], t[1], UPLOAD)
             for log in activeUpLogList:
                 output.write('%s ---> %s (%s) [%d packets]:\n' % (log[0][DST], localIP, log[0][PROTO], len(log)))
-                #analyze(log, output, log[0][DST], UPLOAD, t[2], plot=True)
+                analyze(log, output, log[0][DST], UPLOAD, t[2], plot=True)
 
 
-def analyzeThroughput(log: List[List[str]], start:int, end:int, localIp:str, dir: str, output) -> None:
+def analyzeThroughput(log: List[List[str]], start: int, end: int, localIp: str, dir: str, output) -> None:
     # calculate the average throughput
     d = SRC if dir == UPLOAD else DST
-    #print(log[start:end+1])
+    # print(log[start:end+1])
     timePassed = float(log[end][TIME]) - float(log[start][TIME])
-
-    sizes = [float(x[LENGTH]) / float(timePassed) for x in log[start:end+1] if x[d] == localIp]
-
+    sizes = [float(x[LENGTH]) / float(timePassed) for x in log[start:end + 1] if x[d] == localIp]
     mean = np.sum(sizes)
     output.write('\t' + 'mean throughput: %.2f\n' % mean)
-
-
 
 
 def preprocess(lines: List[List[str]],
@@ -109,9 +105,11 @@ def preprocess(lines: List[List[str]],
     # filter by direction, and non-emptiness
     serverCnt = Counter()
     if dir == UPLOAD:
-        relevantLog = list(filter(lambda x: x[SRC] == localIP, lines[start:end + 1]))
+        relevantLog = list(filter(lambda x: x[SRC] == localIP and 'Len=0' not in x[INFO],
+                                  lines[start:end + 1]))
     else:  # DOWNLOAD
-        relevantLog = list(filter(lambda x: x[DST] == localIP, lines[start:end + 1]))
+        relevantLog = list(filter(lambda x: x[DST] == localIP and 'Len=0' not in x[INFO],
+                                  lines[start:end + 1]))
 
     # pick top SERVER_LIMIT servers
     for row in relevantLog:
@@ -137,22 +135,18 @@ def preprocess(lines: List[List[str]],
 def analyze(log: List[List[str]], output, server: str, dir: str, desc: str, plot=True) -> None:
     """Add your own analyzer function here"""
     analyzePort(log, output, server, dir)
-    analyzeLength(log, output, server, dir, desc)
     analyzeLength(log, output, server, dir, desc, plot)
     analyzeTime(log, output, server, dir, desc, plot)
 
 
 def analyzeLength(log: List[List[str]], output, server: str, dir: str, desc: str, plot=False) -> None:
     # calculate average size of packets
-    log = list(filter(lambda x: 'Len=0' not in x[INFO], log))
     proto = log[0][PROTO]
     lengths = [int(x[LENGTH]) for x in log]
     mean = np.mean(lengths)
     median = np.median(lengths)
-    variance = np.var(lengths)
     output.write('\t' + 'mean size: ' + '%.2f' % mean + ' Bytes\n' +
-                 '\t' + 'median size: ' + '%.2f' % median + ' Bytes\n' +
-                 '\t' + 'variance: ' + '%.2f' % variance + ' Bytes\n')
+                 '\t' + 'median size: ' + '%.2f' % median + ' Bytes\n')
     if plot:
         times = [float(x[TIME]) for x in log]
         plt.plot(times, lengths, marker='x', linestyle='--')
@@ -165,16 +159,13 @@ def analyzeLength(log: List[List[str]], output, server: str, dir: str, desc: str
 
 def analyzeTime(log: List[List[str]], output, server: str, dir: str, desc: str, plot=False) -> None:
     # calculate average time diff between each packet
-    log = list(filter(lambda x: 'Len=0' not in x[INFO], log))
     proto = log[0][PROTO]
     times = [float(x[TIME]) for x in log]
     deltas = [(t - s) * 1000 for s, t in zip(times, times[1:])]
     mean = np.mean(deltas)
     median = np.median(deltas)
-    variance = np.var(deltas)
     output.write('\t' + 'mean delta: ' + '%.2f' % mean + ' ms\n' +
-                 '\t' + 'median delta: ' + '%.2f' % median + ' ms\n' +
-                 '\t' + 'variance: ' + '%.2f' % variance + ' ms\n')
+                 '\t' + 'median delta: ' + '%.2f' % median + ' ms\n')
     if plot:
         times = [float(x[TIME]) for x in log]
         plt.plot(times[1:], deltas, marker='x', linestyle='--')
@@ -187,7 +178,6 @@ def analyzeTime(log: List[List[str]], output, server: str, dir: str, desc: str, 
 
 def analyzePort(log: List[List[str]], output, server: str, dir: str) -> None:
     # analyze srcPort and dstPort
-    log = list(filter(lambda x: 'Len=0' not in x[INFO], log))
     portCnt = Counter()
     for row in log:
         srcPort, dstPort = portNum(row)
